@@ -1,16 +1,35 @@
 let numero = document.querySelector("#numero");
 let digitar = document.querySelector("#digitar")
 let tudo = document.querySelector("#tudo");
+let mostrar_lvl = document.querySelector("#mostrar_lvl");
 
-let lista = new Array(5);
+let  lista_tamanho = 5;
+let lista = new Array(lista_tamanho);
 let _index = -1;
 let _index_resposta = 0;
 let pode_responder = false;
+let fase = 1;
 
-for(var i = 0; i < lista.length; i++)
+function Settar_numero()
 {
 
-    lista[i] = Math.floor(Math.random() * (9 - 0) + 0);
+    for(var i = 0; i < lista.length; i++)
+    {
+
+        var rand_numb = Math.floor(Math.random() * (9 - 0) + 0);
+        
+        lista[i] = rand_numb;
+        
+    }
+
+    if(lista_tamanho > lista.length)
+    {
+
+        var rand_numb = Math.floor(Math.random() * (9 - 0) + 0);
+
+        lista.push(rand_numb);
+
+    }
 
 }
 
@@ -18,6 +37,8 @@ function Mostrar_numero()
 {
 
     _index++;
+
+    mostrar_lvl.innerHTML = fase;
 
     if(_index < lista.length)
     {
@@ -69,7 +90,23 @@ function Mostrar_numero()
 
 }
 
+Settar_numero();
 Mostrar_numero();
+
+function Nova_fase()
+{
+
+    fase++;
+    digitar.textContent = "";
+    lista_tamanho++;
+    _index = -1;
+    pode_responder = false;
+    _index_resposta = 0;
+
+    Settar_numero();
+    Mostrar_numero();
+
+}
 
 function Checar_tecla()
 {
@@ -79,7 +116,7 @@ function Checar_tecla()
 
         let tecla = event.key;
 
-        if(tecla == lista[_index_resposta])
+        if(Number(tecla) == Number(lista[_index_resposta]))
         {
 
             _index_resposta++;
@@ -91,8 +128,10 @@ function Checar_tecla()
 
             digitar.innerHTML = "Errou!";
             _index = -1;
-            Mostrar_numero();
             pode_responder = false;
+            _index_resposta = 0;
+            
+            Mostrar_numero();
 
         }
 
@@ -101,6 +140,8 @@ function Checar_tecla()
 
             digitar.textContent = "Ganhou!";
 
+            setTimeout(Nova_fase, 1000);
+
         }
     
     }
@@ -108,12 +149,3 @@ function Checar_tecla()
 }
 
 document.addEventListener("keypress", Checar_tecla);
-
-function Loop()
-{
-
-    setTimeout(Loop, 1);
-
-}
-
-Loop();
